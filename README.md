@@ -50,3 +50,26 @@ In that Foreground layers tileset, you want to place all foreground elements(suc
 These foreground layers will be placed on top of your characters later down the road(very much later me thinks), so when a character walk pass these foreground layers, it will create the effect that the character is walking behind these foreground layers
 Other foreground layers include that top bit of your fence, top bit of your trees, TOP BIT OF WHATEVER YOUR CHARACTER WALKS BEHIND etc
 Now we are going to expand the whole island so it looks like an island(you can use the author's map or create your own)
+With the island and collisions done, time for html, css, and js
+In your html file, create canvas tag inside the body, link the appropriate files, and link canvas from html to js
+In the js file, set canvas width and height to 1024 and 576 respectively
+Test your canvas out with fillStyle for color and fillRect to check out the space your canvas is taking
+Create an instance of your island image and link the source
+If you apply drawImage on your canvas' context now, your image will not appear on canvas because it has not yet loaded
+Instead, use onload built-in function on your island image and assign the arrow function to it, then use the drawImage method on context
+The image you want on your canvas is the image the player will want the size of the game to be in
+So, in your map editor, zoom in until the size that you think is best(400% is the one being used here)
+Once zoomed to the appropriate size, export that image and your canvas should show whatever your drawImage has drawn and at what position
+To move image left(x axis), it's negative and vice versa
+To move image up(y axis), it's negative and vice versa
+Once your island image is positioned correctly(starting image), move on to player
+Create playerImage and create an instance of Image, and link it
+\*\* Author used the onload on island, and inside the same onload, he also used drawImage on the playerImage, does not work for me, so i used window load event listener instead
+You can adjust the player position to the center in drawImage using half of the canvas width and height and half of the playerImage's width and length(or you can manually adjust them both on your own)
+The author centers the playerImage first using the canvas and playerImage, then manually adjusted the island image to fit the player(seems to do better than manually adjusting for both)
+Note that you are centering the WHOLE playerImage sprite sheet to the center, not a single sprite
+You are currently on using 3 parameters in drawImage(presumably)
+To crop out a single sprite, you will use all 9 parameters
+Once the above is done, your sprite will be out of position(since you center the image in drawImage using the whole sprite sheet)
+However, you do not need to manually center the current cropped sprite now, but instead just divide the offset of the playerImage in dx and dy by 4(or multiply by 0.25)
+Then, you will need to half the offset further to get the player sprite perfectly centered on the starting area(you can just multiply it by 0.125 instead of 0.25 multiply by 0.5)
