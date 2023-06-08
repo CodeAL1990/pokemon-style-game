@@ -73,3 +73,34 @@ To crop out a single sprite, you will use all 9 parameters
 Once the above is done, your sprite will be out of position(since you center the image in drawImage using the whole sprite sheet)
 However, you do not need to manually center the current cropped sprite now, but instead just divide the offset of the playerImage in dx and dy by 4(or multiply by 0.25)
 Then, you will need to half the offset further to get the player sprite perfectly centered on the starting area(you can just multiply it by 0.125 instead of 0.25 multiply by 0.5)
+We will now create directions for your character
+Add a keydown event listener for window and pass event(or e) in the callback function, console.log e.key to see that you are getting the keys when pressing anything on the keyboard
+Add a switch statement for e.key and we will use wasd for directions
+Add cases in the switch statement for wasd(remember to add break for each of them)
+Now create an animate custom method with requestAnimationFrame method on animate
+To animate the images you will need the drawImage methods but putting it in the animate method will require too many variables(due to hardcoded parameters present in the drawImage).
+As such, we will need classes to make the code easier to manage
+Create a class Sprite, and in the constructor you will wrap all your references as an object(this is different from the sidescroller where you do not convert the references into an object, the reasoning here is because an object do not require the references to be in order, making it easier to code(?))
+The references will be position, velocity(not yet made), and image
+Convert the position and image into class properties
+Create custom draw method and move the drawImage with 3 parameters(the background) into the draw method(remember to use this keyword for image now because you are now inside the class)
+For the parameters, you will be referencing the image class property now, and for xy, instead of having hardcoded numbers, you will reference x and y position of background variable which we will now create
+Inside the class, create background variable and call a new instance of Sprite, and inside it pass its position(position will be an object with x and y coordinate properties) and image
+Now call the draw method on background inside animate, and move the drawImage with 9 parameters(player), after the draw method, and call animate to trigger animate function
+\*\* For the image class i used island
+We will try and make the character 'move' now
+To move it, you will need make use of the directional keys you created previously (wsad switch statement in keydown event listener)
+Create a keys variable and assign wsad as an object each and set property to false for each of them
+Then, in the keydown event listener, instead of console.log, set the properties of pressed inside keys variable to true when wsad are pressed
+console.log keys after the keydown event listener and you should see your wasd's pressed properties turning from false to true when pressed
+You want them to become false when you let go of your keys so you will create a keyup event listener for wasd, similar to the keydown event listener, but instead pressed properties become false when keyUp
+In animate, set a condition that if keys w pressed property is true, add background position y with a positive value(moving the island image downwards when pressing w, making the character 'move' in the opposite direction(up in this case))
+Remember your hardcoded values of xy in background's drawImage needs to reference the background variable position properties or the hardcoded values will prevent your character from 'moving'
+If you console.log after the condition in animate, you should see y position constantly being added and thus move downwards, giving an illusion that your character sprite is moving upwards
+Once you can 'move' up, add the conditions with else if for the rest(asd) with the appropriate addition or substraction for the direction
+Note that when moving in any direction, when simultaneously pressing 2 or more directional keys, you 'move' in a random direction which is not ideal
+You want the character to move to the direction of the lastKey being pressed(diagonal movements excluded for now)
+To do that you will need to listen for the last key that is pressed
+Create a lastKey variable before keydown event listener and set it to an empty string(or nothing)
+In each case, set the lastKey variable to that key to denote that was the lastKey being pressed
+In the conditions in animate, add an AND operator for each and check if the lastKey being pressed is true for each key(i.e if w is the lastKey for w, a for a etc)
