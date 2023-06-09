@@ -104,3 +104,55 @@ To do that you will need to listen for the last key that is pressed
 Create a lastKey variable before keydown event listener and set it to an empty string(or nothing)
 In each case, set the lastKey variable to that key to denote that was the lastKey being pressed
 In the conditions in animate, add an AND operator for each and check if the lastKey being pressed is true for each key(i.e if w is the lastKey for w, a for a etc)
+Now, we want to bring the collisions you made into the folder
+In tiled map editor, make collisions visible in your map and export it as a JSON file anywhere
+In that JSON file, find collisions and above it, copy the full array and paste it in a new js file in your project folder(you can place it with your main folder or create a new folder for it(i shall put it inside the Game Assets along with the rest))
+Name that array collisions in your new js file
+Import the new js file into your html
+Be mindful of syntax errors since the array is huge
+Console.log collisions in your main js file and you should see it in your console
+Remove the fillStyle and fillRect for your background(because you do not need them anymore)
+Use a for loop with the limit of collisions.length and increment by 70(because map width is 70), and in that for loop, use slice on collisions array from 0 to 70
+You don't really want to just slice 0 to 70 every iteration but continually through the array
+Since you are incrementing i by 70, i is essentially a +70 every iteration
+As such, instead of 0 you can replace it with i because first iteration it will start as 0 and second 70 third 140 and so on
+For the 2nd argument you need in the slice method, you can add i to 70 to follow the incrementation as well
+You will need to store the calculation of your for loop inside an array so create a variable called collisionsMap and give it an empty array
+Inside the for loop, use the push method on collisionsMap array and pass the slice method you did before into it
+console.log collisionsMap after the for loop to look at the arrays you have made
+You should get an array and inside it a bunch of subarrays with 70 array items that visually matches how your collisions look like in the map
+Now, create a class called Boundary(to differentiate from collision variable name), and pass the position reference in
+Convert position into a class property
+For the width and height, since we imported 400% the scale of the original map, you will need to use 400% of 12px, so 48px
+\*\* In this course, author likes to place all references in classes inside an object so he does not need to reference them in order
+Create custom draw method in Boundary and use fillRect method on the canvas inside it with its position's x, position's y, width, and height
+Use fillStyle and the canvas as well and give it red to give a visual indication
+Outside the Boundary class, create boundaries variable and assign it an empty array
+You are going to loop through the array with subarrays from before, so you will need to use forEach method on collisionsMap array and inside this array you are going to use another forEach method loop to loop through the subarrays
+So for each row in the collisionsMap array, you will use a forEach method for each symbol in the row array(row and symbol are arbitrary names)
+console.log symbol after the arrow function for symbol and you should see that your array is deconstructed to single array items
+Remove that console.log and use a push method on boundaries array, passing it an instance of Boundary and the object reference of position and the xy coordinate
+Give xy 0 for now
+In each row and symbol, you want to place the xy positions based on indexes on the row and symbol's location
+Add an additional argument, i, in with row to indicate its indexes
+Do the same for symbol but give it j to represent its indexes
+i will loop over the subarrays(so each subarray is an item for i)
+j will loop inside the subarrays(so each array item inside the subarray is an item for j)
+In canvas, each row of 70 items will be stacked on top of each other so assigning i to y coordinate will match the rows when looping through collisionsMap array
+You know the height is 48 so multiply i by 48 for its position
+Similarly, x will have the position of j multiplied by the intended width, 48
+To be clearer in your code instead of using hardcoded numbers, you can use static keyword above your constructor in Boundary and assign the width and height of 48 to them
+Then, instead of multiplying by 48 inside the forEach method, you can multiply by Boundary's width and height in x and y respectively(using 48 is technically incorrect here since the width and height of 48 in Boundary's properties are not used until the instance of Boundary is created in the push method inside the forEach method and the 48s in the push method are standalone numbers with no relation to Boundary's properties)
+console.log boundaries array and you will see you are creating an instance of Boundary on every item inside the collisionsMap array(because we did not look for the item we want to draw Boundary on which is 1025s and not the 0s)
+So, add a condition before the push method where symbol equals to 1025 is true, then push it into the boundaries array
+In your background variable, instead of using hardcoded values for xy positions when creating Sprite, create an object called offset and place the xy values in that object
+After the above, inside the new instance of Sprite, replace the values with the offset's x and y properties
+Move the offset object above collisionsMap forEach method because you want to use those properties inside the method
+Inside the x and y properties in the forEach method(s), add the offset to both of them
+In animate, use forEach method on boundaries array and for each boundary, call the draw method on it
+\*\*Forgot to create a new instance of Boundary in the forEach method for collisionsMap and row(got a TypeError for boundary.draw())
+Above animate, create a testBoundary variable and instantiate Boundary with a position properties of x and y of your choice(400, 400 in this case)
+Inside animate, comment out the forEach method for boundaries and call draw on testBoundary
+Notice when you move your character the testBoundary moves with you
+To prevent it, you are going to move it together with your background in your inputs
+In your conditions for each key presses, add or minus testBoundary's positions accordingly alongside the background so they move together(you will need parenthesis now since you have more than one line of outcome)
