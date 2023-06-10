@@ -156,3 +156,59 @@ Inside animate, comment out the forEach method for boundaries and call draw on t
 Notice when you move your character the testBoundary moves with you
 To prevent it, you are going to move it together with your background in your inputs
 In your conditions for each key presses, add or minus testBoundary's positions accordingly alongside the background so they move together(you will need parenthesis now since you have more than one line of outcome)
+Now, instead of writing the same lines of code for background and testBoundary, we should put them in a variable and extract their info from this variable
+Create a variable called movables, assign an array to it and add background, and testBoundary as array items
+Then, back to the input and lastKey conditions, instead of writing the 2 lines of code, use the forEach method on this newly created movables variable array instead, and for each movable, increase position of y by 3(same as before but you are applying to a variable that has the previous variables as array items)
+This way, when you have other variables that need to move alongside the background, you can just add it to movables to sync them
+Do the same for the other 3 inputs after your input you have refactored is working
+We want to refactor drawImage for playerImage because we are unable to reference any of the character's dimensions since we are drawing it directly inside animate function
+Move the drawImage method from animate to Sprite's draw
+Once you are inside the class, you cannot reference the global variable now and you will need to reference it from your class' properties(image in this case), so change all playerImage to image with the this keyword
+Remove the previous drawImage method inside draw and you should see it is all messed up and the player is missing(since we never created a player class)
+Looking at your drawImage parameters for sw, you divided it by 4(or multiplied by 0.25) because the parameters were used to draw your player image but now placed inside Sprite class which affected your background
+As such you do not want to divide image width by 4 for background but by 1 to use the full width instead
+But since the Sprite class is now used for background and character, how do we make drawImage fit for both?(\*\*I'm not sure why author did it this way instead of separating player and background but whatever)
+Since the 4 in sw represents the 4 sprites in the image file, we can add a new reference called frames and convert it to a class property
+Then, instead of dividing the image's width by 4 or 1, we can just divide it by frames' max property(assign it in the frames reference as an object, giving max a default value of 1)
+For dx and dy values, those are only for your player's sprite, so cut them and move them out of the class(comment them out for now)
+To replace dx and dy, you want dx to be the position of x and dy to be position of y
+For dw, it's the same as sw, so instead of dividing by 4, divide the width by the max property of frames
+You should now get back your background starting location after the refactor without your player
+Now, create a new variable called player and add a new instance of Sprite, passing it position object with x and y properties
+The x and y refers to the cut out calculations you had previously in drawImage because those are specifically for your player sprites
+Place them inside x and y respectively but since you are outside the Sprite class now, this keyword will not work now
+Using playerImage will have some delays since the code is being ran right away when the file is loaded
+Instead, just use hardcoded values of the width and height of the sprite sheet for now(192x68)
+After changing the above, call draw on player in animate after testBoundary's so player sprite will go above testBoundary's red blocks
+You will get all 4 sprites because you are using the full sprite sheet
+To use only one, you will need to add the frames object in player and set max to 4
+This way, your player variable will reference the frames parameter in Sprite class that and max has a default value of 1 so the new instance of sprite created inside player variable will be divided by 4
+Test your inputs out and your background and player should work just like before it got messed up
+Now that we have a player variable, we can now reference its position to test for collisions with the red blocks
+In animate, set a condition where if player's x position plus its width is greater than or equal to testBoundary's x position, console.log colliding text, to test if player sprite will be stopped when it touches the left side of the testBoundary object
+This will not work because becaues we do not have a player width in Sprite class
+Inside Sprite class, you will need to create width and height properties
+We actually want the width and height values you placed in sw, sy, dw and dy, but since they are in the draw method we cannot make use of them
+As such, set width to the image's width divided by frames' max and height to image's height
+You want the image to load first since you will need it to load before the calculation of width and height can be done, so use built in onload on image with the arrow function, and once it loads, execute the calculations of width and height
+Return back to your console and if your character is on the right side of the testBoundary block, you should see the colliding text shoot up since the condition is fulfilled. Move it to the left and the console log should stop running
+Back in draw, since we have moved the calculations of sw, sy, dw, and dy to width and height class properties, you can replace the calculations inside drawImage to width and height instead
+Now that the left side of the collision is working, we shall do it for the right side
+In animate, add an AND operator for the collision condition(Add a collision detection section in animate and put the condition in) and check if player's x position is less than or equal to testBoundary's x position plus its width, then collision happens
+Now, touching the left and right side of testBoundary(since you have not put a condition on top and bottom, the condition covers the whole height of the canvas), will invoke the colliding message
+To accomodate the top and bottom of testBoundary, check for player's y position is less than or equal to testBoundary's y position plus its height for top
+For bottom, check if player's y position + its height is more than or equal to testBoundary's y position
+With conditions for top, bottom, left and right, you should only trigger the colliding message when touching either sides of the testBoundary object
+To make the code more legible, we will now create a custom function for collision between player and testBoundary
+Create rectangularCollision function and pass in rectangle1 and rectangle2 inside an object as its argument
+Inside the function, return the 4 conditions for collisions you wrote in animate(move them in and change player and testBoundary to rectangle1 and rectangle2 respectively)
+Now, instead of checking for the 4 conditions inside the if statement in animate, you will call rectangularCollision, assigning player to rectangle1 property, and testBoundary to rectangle2
+\*\*Honestly this probably makes it worse, should just move them to different files and do import/export
+All in all, the code should work the same after the refactor
+Once the code is working, you want to apply it to not 1 boundary block but all boundaries in your map
+So uncomment your forEach method for boundaries array and move the collision detection code inside it to apply to all boundaries
+For rectangle2, you will need to change it to the callback variable you are using(boundary in this case) instead of testBoundary
+Remove all testBoundary related code(the variable, the draw call, the array item inside movables)
+Inside movables, you want the boundaries array but having an array inside an array, your code will be unable to read it
+So use the spread operator on boundaries inside movables array to flatten it
+Now, when player touches any collision block the colliding message should go off
