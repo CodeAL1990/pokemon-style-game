@@ -212,3 +212,37 @@ Remove all testBoundary related code(the variable, the draw call, the array item
 Inside movables, you want the boundaries array but having an array inside an array, your code will be unable to read it
 So use the spread operator on boundaries inside movables array to flatten it
 Now, when player touches any collision block the colliding message should go off
+With the above done, we will now make it so that the player will not be able to go pass a boundary
+To detect when player is colliding with a boundary, you will detect it when player is pressing inputs and player collides with a boundary
+To do this for all boundary blocks, you will need to loop through them
+You cannot do this with a forEach loop so you will need to use the more conventional for loop in under the inputs section for each individual directional input
+So, for w(up) input, use a for loop with boundaries.length limit, increment i, and in the loop, move the condition in the forEach loop that calls rectangularCollision inside the for loop
+With that condition inside the new for loop, you will not have access to boundary callback variable now in forEach, so create a variable inside the for loop called boundary and assign it the boundaries array at i index
+Additionally, you will need to 'predict' into the future if player and boundary is going to overlap
+You know that you are moving player at 3 pixels in all directions, so for w(up) input, wrap the boundary property for rectangle2 with curly brackets(turning it to an object) and use the spread operator on it to create a clone of the boundary and not override the original
+With the clone done, you will add a position object item alongside spreaded boundary, with x and y properties, with x property remaining the same at position x of boundary but y property 'predicting' the 3 pixels movement upwards for the w input, thus adding 3 to y position of boundary
+Colliding player with a boundary now will log the colliding message out and stopping immediately when you stop pressing w input
+You want to stop the movement of the player altogether when the first colliding message logs out
+Since we are using all the boundary objects in the for loop, javascript will detect the collision between player and the other objects to be false(since player will only be colliding with 1 or 2 tiles at most) thus we want to break out of the loop when the first collision happens
+Outside the condition for w input, create a variable called moving and set it to true
+After the rectangularCollision condition in w input, and colliding message console log, set moving to false and add a break statement
+For the other input conditions to happen, you want moving to be true so set a condition when moving is true, then the other inputs can occur
+Now hold w input and you should see that you cannot go pass a boundary, pressing other inputs will allow you to move to show the moving condition works
+With the above done, apply the for loop up to and including the condition when moving is true(minus the console.log) for each other inputs, and change the 'prediction' for x or y accordingly in the other inputs base on their direction
+\*\*\Had to adjust my player's position abit because its starting location clipped boundary and i was not able to move
+To 'remove' the boundary blocks visually, go to your fillStyle of red in Boundary draw, and change it to rgba of red with 0 opacity
+With collisions sort of done, we want to deal with foreground objects
+In your map editor, make only your foreground objects as the visible layer and export it as foregroundObjects image in your project folder (remember to scale it to 400% like your game map)
+Go to your background variable with the new instance of Sprite
+Copy and paste the background variable, creating a second set and rename background to foreground
+Now is probably a good time to move classes away from this js file because your code is all clogged up
+Create classes.js and move all your classes in
+Now, link the classes.js file inside your html(above your main js file so your main js file have access to it)
+\*\*Author did not save his files at this point so he did not realise he cannot reference context from his main js file now
+With foreground variable done, create foregroundImage and give it a new instance of Image and link it to your foregroundObjects image
+For your foreground variable, change the image property to foregroundImage you just linked
+You want to render your foreground as the last layer so call the draw method on it after background and player draw calls in animate
+You will want to add foreground to your movables array so it moves with the background
+\*\*Had to remove my window load event listener when moving the classes to a different js file
+With your foreground code done, player should be able to move behind objects you determined to be foreground and give user an illusion that it is 'behind' the foreground object
+\*\*I might edit some trees in to create more foreground illusions
