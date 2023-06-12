@@ -35,19 +35,35 @@ image.src = "./GameAssets/pokemonStyleGame.png";
 const foregroundImage = new Image();
 foregroundImage.src = "./GameAssets/foregroundObjects.png";
 
-const playerImage = new Image();
-playerImage.src = "./GameAssets/playerDown.png";
+const playerDownImage = new Image();
+playerDownImage.src = "./GameAssets/playerDown.png";
+
+const playerUpImage = new Image();
+playerUpImage.src = "./GameAssets/playerUp.png";
+
+const playerLeftImage = new Image();
+playerLeftImage.src = "./GameAssets/playerLeft.png";
+
+const playerRightImage = new Image();
+playerRightImage.src = "./GameAssets/playerRight.png";
 
 const player = new Sprite({
   position: {
     x: canvas.width * 0.5 - 192 * 0.125,
     y: canvas.height * 0.55 - 68 * 0.5,
   },
-  image: playerImage,
+  image: playerDownImage,
   frames: {
     max: 4,
   },
+  sprites: {
+    up: playerUpImage,
+    left: playerLeftImage,
+    right: playerRightImage,
+    down: playerDownImage,
+  },
 });
+console.log(player);
 
 const background = new Sprite({
   position: {
@@ -148,7 +164,11 @@ function animate() {
 
   //inputs
   let moving = true;
+  player.moving = false;
   if (keys.w.pressed && lastKey === "w") {
+    player.moving = true;
+    player.image = player.sprites.up;
+
     for (let i = 0; i < boundaries.length; i++) {
       //collision detection for w
       const boundary = boundaries[i];
@@ -175,6 +195,9 @@ function animate() {
         movable.position.y += 3;
       });
   } else if (keys.a.pressed && lastKey === "a") {
+    player.moving = true;
+    player.image = player.sprites.left;
+
     for (let i = 0; i < boundaries.length; i++) {
       //collision detection for a
       const boundary = boundaries[i];
@@ -200,6 +223,9 @@ function animate() {
         movable.position.x += 3;
       });
   } else if (keys.s.pressed && lastKey === "s") {
+    player.moving = true;
+    player.image = player.sprites.down;
+
     for (let i = 0; i < boundaries.length; i++) {
       //collision detection for s
       const boundary = boundaries[i];
@@ -225,6 +251,9 @@ function animate() {
         movable.position.y -= 3;
       });
   } else if (keys.d.pressed && lastKey === "d") {
+    player.moving = true;
+    player.image = player.sprites.right;
+
     for (let i = 0; i < boundaries.length; i++) {
       //collision detection for d
       const boundary = boundaries[i];

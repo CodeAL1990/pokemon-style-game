@@ -245,4 +245,38 @@ You want to render your foreground as the last layer so call the draw method on 
 You will want to add foreground to your movables array so it moves with the background
 \*\*Had to remove my window load event listener when moving the classes to a different js file
 With your foreground code done, player should be able to move behind objects you determined to be foreground and give user an illusion that it is 'behind' the foreground object
-\*\*I might edit some trees in to create more foreground illusions
+\*Editted some trees in to create more foreground illusions
+Instead of a static player sprite, we will now animate it
+In Sprite draw, there are hardcoded 0s in sx and sy which represents the first frame of the sprite sheet
+Since we only have 1 row of player sprites to animate, sy will not be touched here
+To track the frame our sprite is currently on, we want to iterate the by the width of each sprite(48px, 96px etc) in sx
+The frames object in Sprite has 1 property: max, inside the constructor
+If we want to add another property to it, we will need to wrap the conversion into an object, spread it, and you can place a comma to add whatever property you want to frames object
+In this case, we give it a val which stands for value(value is a reserved variable for javascript) property set to 0
+In sx, you reference the val property in frames(this.frames.val)
+Increment this value property after the drawImage method(but still inside draw) under the condition that it only happens when frames' value is lesser than frames' max - 1(because max is 4 but javascript starts from 0 so you will draw out an empty frame before reverting back to 0, thus you want to end it at 3)
+Else(when it is greater than max), set frames' value back to 0
+Back in sx, you want to multiply the reference by the width(48px) of the sprite which you have calculated in properties
+Now, you should see your character animating but it is too fast because it is animated on each frame
+We will want to animate the next frame of the sprite sheet after a certain number of frames have passed(we use 10 as an example)to slow down the animation speed
+To do this, add another property to frames object in Sprite called elapsed and set it to 0
+In Sprite draw, before the condition between val and max, set a condition when frames' max is more than 1, increment frames' elapsed
+Back to the previous condition between val and max, add a pre-condition where if frames' elapsed is 0 whenever its value is divided by 10(using modular operator), invoke the val and max condition
+You should see a more comfortable animation speed for your sprite
+We want to move player when a key is pressed/inputted
+Add a property in Sprite called moving and set it to false
+Before the elapsed condition, add a condition where if moving is false, just return it(you could wrap both elapsed and val and max conditions in another if statement to check if moving property is true as well)
+With the above done, move to the input section in your main js file to apply the logic
+In the w input condition, set player's moving property to true at the start
+The sprite will not move at the start but once it moves with w input, it will not stop even if you let w go
+To prevent this, you want to set player's moving property to false by default outside the condition
+Once your player move when w is pressed and stops when w is released, you can set player's moving property to true for the rest of the directional inputs
+With the above done, you would want to reference the correct player image for each direction
+In Sprite, reference sprites in constructor and convert it to a class property
+In your main js file, when creating your player, you want to add a sprites object inside the new instance of your Sprite and add up,down,left,right properties to it, referencing each image associated to each direction
+You will need to create the remaining player images just like your playerImage(You can rename it to playerDownImage now to go with the rest)
+console.log player and you will see your Sprite being populated with the 4 different images but in the browser you will not swap between them yet when moving in different directions
+You will apply the different directions to when the appropriate input is pressed
+For w(up) key condition, set player's image property to player's sprites up property
+Once you can see that the w key is correctly animating your sprite, set the player's image property to the other directions in the other inputs
+\*\*Battle tiles and activation next
