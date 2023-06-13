@@ -280,3 +280,39 @@ You will apply the different directions to when the appropriate input is pressed
 For w(up) key condition, set player's image property to player's sprites up property
 Once you can see that the w key is correctly animating your sprite, set the player's image property to the other directions in the other inputs
 \*\*Battle tiles and activation next
+For the dark green grass areas, we want them to be our battle zones
+In your map editor, create a new layer called battle zones and place red blocks in the dark green patches in that layer
+Then, with them visible, export them as json, extract the array from battle zones, and place it in a new js file called battleZones with the variable battleZones, and assign the extracted array to it
+In your html file, source your battleZones js above your collisions js
+console log battleZones in your main js file and check that your battleZones data is present
+The battle zones is set up similar to your collisionsMap, so copy and paste the for loop for collisionsMap but edit all collisionsMap to battleZonesMap, and collisions array to battleZones array in the slice method
+console log battleZonesMap and if you did it correctly, the sub-arrays shown in your battleZonesMap array should be layed out similar to your collisionsMap
+Rename your variable in battleZones js to battleZonesData(because we want to use that variable to create an array for battleZones to push in battle tiles)
+Now, create a battleZones variable above image variable, assign an empty array to it, and below it, duplicate the forEach method you did for collisionsMap
+Instead of collisionsMap for the second set, change it to battleZonesMap
+For the push method, push into the empty battleZones array instead of boundaries
+console log battleZones to see that a bunch of Boundary classes are added to the array
+In animate, just like your boundaries, you want to use a forEach method on battleZones and for each battleZone, call draw on it
+In your fillStyle in Boundary, increase your rgba opacity so that the red blocks are visible and you should see your battle zones drawn but it will not move in sync with the background
+So, place battleZones array into movables and spread it just like you did for boundaries
+For collision, your battle zones will work the similarly like your boundaries, just that it wouldn't stop them from moving through it
+As such, the collision detection code can be used for battle zones too
+Copy the collision detection code for w input, and paste the second set below it
+Instead of boundaries, you will use battleZones, and change boundary variable to battleZone
+Since you are not restricting movement, you do not need to include position of rectangle2 and you could just replace the whole object with battleZone which you defined
+You do not want to stop player from moving in battleZones so remove the code for moving set to false inside it
+Keep the break statement and console log a message when colliding with battleZones
+Now, when you move through battleZones with w input, you should see the message
+However, since we are detecting collision for all directional inputs and there are no additional calculations involved, it would be better to set a condition for whenever a directional key is pressed, then run the collision code to check if you are inside a battleZone, instead of placing the code inside each input
+As such, above inputs section, add a battleZones collision check and set a condition to check if w or a or s or d is pressed, then run the modified collision code for battleZones
+If you did it correctly, the collision message will be logged out in the battleZone regardless of direction
+Currently, the moment the rectangular area of the player and the battleZone touch, the message is logged
+However, we want the player to be inside the battleZones before battle is triggered
+As such, we will want to add a code that detects that the player rectangle is more or less 50% inside the battleZone, then trigger the battle
+To add in that condition, in battleZones collision detection, after rectangularCollision condition, add an AND operator and check if overlappingArea(variable not yet created) is greater than player width multiplied by height divided by 2(division by 2 is to reduce the area needed for the condition to occur since player dimensions is much larger than the overlapping area)
+Now we want to create overlappingArea variable and in it, calculate the area of the intersecting rectangle between player and battleZone
+We want to find the min of the right edge between the two intersecting rectangles at x position minus the max of the left edge at x position -> This will result in the finding the width of the intersecting rectangle
+Then, we will need to find the height which means we want to multiply the above with the min of the bottom edge minus the max of the top edge of the rectangles -> multiplying with this result(height of the intersecting rectangle) will give you the intersecting(overlapping) area
+Wrap the calculation for width and height separately with parenthesis so their calculations are done first before multiplying
+In the condition for rectangularCollision AND overlappingArea, add an AND operator after overlappingArea condition and check for Math.random of less than 0.01
+This will mean battleZone collision message will occur less than 1% of the time, simulating a random battle occurance rate
