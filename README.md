@@ -316,3 +316,47 @@ Then, we will need to find the height which means we want to multiply the above 
 Wrap the calculation for width and height separately with parenthesis so their calculations are done first before multiplying
 In the condition for rectangularCollision AND overlappingArea, add an AND operator after overlappingArea condition and check for Math.random of less than 0.01
 This will mean battleZone collision message will occur less than 1% of the time, simulating a random battle occurance rate
+Now, instead of a collision message whenever it occurs, we will want that message to stop the player from moving and activate an animation that flashes the screen to black
+\*\*Change battleZones collision check to Activate a battle to be more descriptive
+In Activate a battle section, after the condition is ran, set battle's inititated(not yet made) property to true
+Before the battle activation condition is ran, set a condition where if battle's iniatiated is true, return it immediately thereby preventing the code after it from running
+We will need a battle object variable and within it an initiated property
+As such, outside animate, create battle object and set the initiated property inside to false
+In inputs section, move moving set to true and player's moving set to false before the return statement on battle.initiated to stop player from moving once battle.initiated turns true
+To do this we can either do it within the canvas(not covered), or create divs with css properties
+Create a parent div and wrap it around the canvas
+Create a child div inside the parent div and before the canvas
+Inside the child div you want a style it with background color of black, position of absolute -> the absolute position unlocks the top right bottom left properties to determine at which pixel you want the div to cover(which is 0 in this case which will make the div start at the edges of each side)
+The parent div has a default position of block so it will take up the full width of the browser
+To fit the width of the parent div to canvas, you will need to change its display to inline-block
+Set the parent's div position to relative and this will fit the child div to its parent div(change color to see the fit if your background and child div color is the same)
+Set opacity of child div to 0 once child div fits
+We want to prevent the div from obstructing us in not being able to click the canvas, so set pointer-events in style to none
+We will now import an animation library that uses javascript for this scene transition and for the sprites for the battle later
+Import gsap cdn version 3.9.1(for this project) as a script in html
+In your main js file, console log gsap to see its properties in your console(and to check if you imported it correctly)
+To use gsap, you will need an id for the div you want to animate(the child div)
+Give it an id and in your main js file, use call to on gsap with, first property being the given id, and the second property being an object with a property of opacity set to 1
+If done correctly, your div should fade from 0 opacity to 1
+Add another property inside it called repeat and set it to 3
+This will repeat the opacity from 0 to 1 repeatedly up to 3 times but the animation does not look good since it is just looping 0 to 1 opacity back to back
+Add another property called yoyo and set it to true
+This will make the animation go to 0 to 1 to 0 to 1 three times, making the animation look smoother
+Remember, this is a 'flashing' effect when a battle occurs, so you want it to be what you intended, a 'flash', so add another property called duration and set it to 0.4, simulating that flashing effect
+With the animation editted to how you would like it, move the gsap.to code in battle activation section after you set battle's iniatiated property to true
+When battle occurs in your battleZones, this flashing effect should take place
+Notice that the flashing effect ends on your map which is not what you want because you want it to be black and you swap to a new battle screen
+To end on opacity set to 1, add another property called onComplete function, and inside it use gsap.to with the first argument being the same id, and a second argument, an object with opacity set to 1, and the same duration as the original gsap.to
+Now, when battle occurs, your div should flash and end at black(or whatever your background color for your child div is)
+requestAnimationFrame on window will keep calling animate when the latter is passed in continuosly
+Store window.requestAnimationFrame(animate) in a variable called animationId
+console log animationId and you should see the animation frames constantly increasing till the end of time
+When battle activation occurs, we want to stop this animation and transition to another scene with a different requestAnimationFrame
+To do this we will want a deactivate animation loop section and a activate new animation loop section to keep track of which animation is occuring
+To deactivate animation loop, you will call cancelAnimationFrame on window with animationId argument
+If you place that section after gsap.to is ran, it will continue to run and not deactivate because it cancelled it too late as gsap.to is already running
+Place the deactivation section right before battle's iniatiated property turn true(acceptable because the only moving sprite here is the player)
+Right before your return statement for battle.initiated, console log animationId to check if the animation frames stop when battle occurs(if it stops it works)
+The activate new animation loop section will be placed after gsap.to has ran and inside it you will call a custom method called animateBattle(not yet made)
+After the animate call, you will now have a custom animateBattle method with requestAnimationFrame call on window(the code placements are getting messy, place this above your event listeners for lastKey), and console log an animating battle message inside
+Once the overlappingDiv flashes, you should see animation frame stop from animate, and animating battle message in animateBattle start running continually, representing the transition from map to battle(comment/remove the console log for animationId if it lags you)

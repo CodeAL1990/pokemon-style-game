@@ -1,5 +1,6 @@
 const canvas = document.getElementById("canvas1");
 const context = canvas.getContext("2d");
+//console.log(gsap);
 
 canvas.width = 1024;
 canvas.height = 576;
@@ -178,7 +179,13 @@ function rectangularCollision({ rectangle1, rectangle2 }) {
   );
 }
 
+const battle = {
+  initiated: false,
+};
+
 function animate() {
+  const animationId = window.requestAnimationFrame(animate);
+
   background.draw();
   boundaries.forEach((boundary) => {
     boundary.draw();
@@ -190,7 +197,12 @@ function animate() {
   player.draw();
   foreground.draw();
 
-  //battleZones collision check
+  let moving = true;
+  player.moving = false;
+
+  //console.log(animationId);
+  if (battle.initiated) return;
+  //Activate a battle
   if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
     for (let i = 0; i < battleZones.length; i++) {
       const battleZone = battleZones[i];
@@ -214,14 +226,29 @@ function animate() {
         Math.random() < 0.01
       ) {
         console.log("Battle occurs");
+        //deactivate current animation loop
+        window.cancelAnimationFrame(animationId);
+        battle.initiated = true;
+        gsap.to("#overlappingDiv", {
+          opacity: 1,
+          repeat: 3,
+          yoyo: true,
+          duration: 0.4,
+          onComplete() {
+            gsap.to("#overlappingDiv", {
+              opacity: 1,
+              duration: 0.4,
+            });
+          },
+        });
+        //activate new animation loop
+        animateBattle();
         break;
       }
     }
   }
 
   //inputs
-  let moving = true;
-  player.moving = false;
   if (keys.w.pressed && lastKey === "w") {
     player.moving = true;
     player.image = player.sprites.up;
@@ -335,9 +362,13 @@ function animate() {
         movable.position.x -= 3;
       });
   }
-  window.requestAnimationFrame(animate);
 }
 
 animate();
+
+function animateBattle() {
+  window.requestAnimationFrame(animateBattle);
+  console.log("animating battle");
+}
 
 //island.onload = () => {};
