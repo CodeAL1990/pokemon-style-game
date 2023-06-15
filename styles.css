@@ -1,3 +1,21 @@
+* {
+  font-family: "Press Start 2P", cursive;
+}
+
+button:hover {
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+button,
+h1 {
+  font-size: 16px;
+}
+
+h1 {
+  margin: 0;
+}
+
 #canvas1 {
   border: 5px solid black;
 }

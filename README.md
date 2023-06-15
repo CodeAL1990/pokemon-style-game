@@ -360,3 +360,65 @@ Right before your return statement for battle.initiated, console log animationId
 The activate new animation loop section will be placed after gsap.to has ran and inside it you will call a custom method called animateBattle(not yet made)
 After the animate call, you will now have a custom animateBattle method with requestAnimationFrame call on window(the code placements are getting messy, place this above your event listeners for lastKey), and console log an animating battle message inside
 Once the overlappingDiv flashes, you should see animation frame stop from animate, and animating battle message in animateBattle start running continually, representing the transition from map to battle(comment/remove the console log for animationId if it lags you)
+Bring battleBackground.png into the project folder
+Create variable battleBackgroundImage and assign a new instance of Image to it and link it
+With battleBackgroundImage linked, create a variable battleBackground and assign a new instance of Sprite with the required references(with references wrapped in an object, you can choose references the variable needs and not everything inside the object, in this case just position and image)
+Set xy position to 0, and image to battleBackgroundImage
+In animateBattle, call draw on battleBackground
+Now, when a battle occurs, you should see the battleBackground image, but it will fade to black as dictated by gsap.to
+To fix it, you will need to go back to your onComplete gsap.to and add another onComplete method with the animateBattle call
+After the above, use another gsap.to with the same arguments but set opacity back to 0 to reveal the battleground image(remember the first argument of gsap.to requires the id(#) symbol to be written to link the id to html)
+You should see the flash with the map, and the transition to the battleground image
+We will now start editting our battleground with the necessary elements
+Currently, we will need to reveal our battleground via activation from battle, which will be tedious everytime the browser refreshes
+To reveal only the battleground, comment out animate call for now, and call animateBattle at the end of animateBattle method so battleground will always be drawn on the browser
+We will now add battle sprites in the battleground
+Move the emby and draggle sprites to our project folder
+Then, create draggleImage and set a new instance of Image to it and link it
+After that, create new instance of Sprite for draggle with position and image references
+draggle will be the opponent so xy position will be 800,100(already calculated by author)
+Set image to draggleImage and call draw on draggle in animateBattle
+The full spritesheet will be drawn on your div
+Similar to your player sprite sheet, you will use the frames reference here and set max property of frames to 4
+Notice that draggle is not animating and if you look at the draw method in Sprite where animation occurs, we added a condition where if moving is false, we return it immediately, stopping the animation
+The above was used to prevent player from animation when standing still but we need the subsequent code to run for draggle for it to animate
+For the moving variable, you can change/refactor it to animate for more appropriate term(this might confuse you with the animate method but hey)
+Instead of setting animate to false in Sprite, convert it to a class property and reference it in the constructor and set it to false
+We will need to refactor some code in the player variable
+Change all player.moving to player.animate
+With animate property referenced in Sprite, you can use the reference in draggle and set it to true inside it
+Now, draggle should be animated
+Your draggle animation seems to be fast and to slow it down, currently, you will need to change a hardcoded value of the value after the modulus operator to a higher value, which will also affect your player sprite animation, which is not ideal
+We will need to change that value to a variable that could be set specific to each sprite
+Change the hardcoded value after the modulus operator to a new property called hold(not yet made) in frames
+In frames reference, add a second property called hold and set it to 10
+In player variable, you will need to add the hold property and set it to 10(adding a second property in frames changes it to a new object so if you do not reference hold in player you are technically referencing a completely different object)
+In draggle, set hold to 30
+As such, you can now change animation speed for each sprite via the hold property
+You can swap between map and battleground by calling animate and commenting animateBattle and vice versa
+Test the player and draggle animation speed out and see if they are correct
+Once the above is correct, bring emby to the js file just like you did for draggle, with the appropriate position xy changes(280,325 -> calculated by author)
+Once done, you should see emby animated on the player side of the battleground
+We will now add an attack bar interface in html which will span across the width of the canvas right below our emby sprite in the battleground
+In html, add a div element below our canvas but inside the parent div, style it with background color of white, width, and height of 200px each
+Add position of absolute inside the new div and set bottom to 0 so the new attack bar div will stick to the bottom of the parent div
+To span it across the width of the parent div, you will use the left and right properties of absolute and set them to 0
+Delete your width so it is not hardcoded anymore and your div should span across the parent div now
+Adjust the height so it does not cover your emby sprite
+Add a border to differentiate the attack bar interface with the battleground background
+Just like a pokemon game, in the attack bar interface, you will split it into attacks/skills player can employ on the left side and the right side, displaying the attack/skill type(left side being larger than the right, around 70:30 ratio)
+Inside the attack bar div, add two divs
+In the first div(left), add 3-4 buttons named attack1 to whatever
+For the second div(right), add h1 element with Attack Type text placeholder
+Add a display property of flex to the parent div of the two divs above
+In css file or your body tag, set h1 element margin to 0
+In your first div(left), style it with a width of 66.66%(author's or just 70%)
+For your second div(right), style it with the remaining
+Add display of flex to the second div(right), unlocking align-items property and set it to center, and justify-content, set it to center as well
+For the first div(left), set display to grid
+This unlocks grid properties, now use grid-template-columns and set it to a repeat over 2 columns and 1 fraction(fr) each
+To remove the border of your attacks(not sure this is needed), set border to none for buttons
+Add a button hover effect and set cursor to pointer
+Import a google font style for some text customisation(place it above your css file if you are using it so your custom css file can have access to the fonts)
+Set the whole document to that font
+Set button and h1 element to 16px
