@@ -422,3 +422,25 @@ Add a button hover effect and set cursor to pointer
 Import a google font style for some text customisation(place it above your css file if you are using it so your custom css file can have access to the fonts)
 Set the whole document to that font
 Set button and h1 element to 16px
+With the attack bar interface done(sort of), we will now deal with the health bar interface
+They will be located on the left of draggle and right of emby
+In the parent div with the canvas tag, add a div element above the canvas tag which will represent the top left bar for draggle
+Set it to black, with a 250px and 100px for width and height respectively, and a position of absolute to fit into the parent div which has a position of relative
+You want to move the div to the left of draggle, so set top and left to 50px
+Set a solid border for the div
+Add a h1 tag inside the div and write Draggle
+Remove the height property to have the div fit to the height of the text instead
+If you set the font size of the previous h1 tag in html, you would need to set the font size for this h1 tag as well
+Add padding of 12px to the div of draggle
+Inside the draggle div and after the h1 tag, add another div which will have a default position of block, and thus it automatically takes up 100% width of the parent div which is ideal for health bar representation
+Height is not determined so you can set 5px on it and give it a background color
+Set a margin so Draggle text and the health bar is spaced better
+This first health bar you created is when the pokemon is when it is healthy(so it should be green in this case)
+Create a second div below the first health bar div and this div will represent health loss
+Wrap both health bar divs with a parent div and set its position to relative
+Set the green(or which ever color represents healthy) bar to position of absolute
+Remove the margin property so absolute position works properly
+Set top, left and right of the absolute health bar to 0 so it overlays on top of the health loss bar
+Change width of absolute health bar to lower than 100% to see the 'health loss effect'
+Now create an Emby div box and health bar similar to draggle
+For Emby, left position should be changed to right of 50px so it's spaced the same as draggle text and bar
