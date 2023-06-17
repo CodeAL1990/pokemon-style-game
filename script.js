@@ -396,6 +396,7 @@ const draggle = new Sprite({
     hold: 30,
   },
   animate: true,
+  isEnemy: true,
 });
 
 const embyImage = new Image();
@@ -411,6 +412,7 @@ const emby = new Sprite({
     hold: 30,
   },
   animate: true,
+  isEnemy: false,
 });
 
 function animateBattle() {
@@ -422,5 +424,19 @@ function animateBattle() {
 
 //animate();
 animateBattle();
+
+allBtns = document.querySelectorAll("button");
+allBtns.forEach((button) => {
+  button.addEventListener("click", () => {
+    emby.attack({
+      attackMove: {
+        name: "Tackle",
+        damage: 10,
+        type: "Normal",
+      },
+      recipient: draggle,
+    });
+  });
+});
 
 //island.onload = () => {};

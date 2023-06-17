@@ -444,3 +444,76 @@ Set top, left and right of the absolute health bar to 0 so it overlays on top of
 Change width of absolute health bar to lower than 100% to see the 'health loss effect'
 Now create an Emby div box and health bar similar to draggle
 For Emby, left position should be changed to right of 50px so it's spaced the same as draggle text and bar
+We will now modify our placeholder attacks(attack1, attack2 etc), starting with attack1 into tackle
+In html, change attack1 to Tackle text
+After call of animateBattle, select all buttons and bring them into the main js file(i call it allBtns)
+For all these buttons, use a forEach method on it, and for each button,console log button for now
+In console, you should see the buttons listed out
+In place of the console log, add a click event listener for button instead, and console log button after
+When the above is done, clicking the buttons should show on console and clicking anywhere else should not show anything
+With the click event working, we can now replace the console log with an attack method for emby
+Call attack(not yet made) for emby, and pass an attackMove object in it with name, damage, and type properties to it
+Name will be Tackle, 10 damage, and type of Normal
+After the attackMove object, add a recipient property to attack and set it to draggle
+In Sprite, add an custom attack method, and pass in attackMove and recipient
+So when casting tackle, we want the sprite to move from left to right, simulating a 'tackle' attack
+In the attack method you just created, add a gsap.to method, pass in position property in Sprite for first argument, and for the second argument, pass in an object x and set it to x position x minus 20
+Now, when you click Tackle button, you should see your emby sprite move 20px to the left
+To animate using gsap in succession which includes previous gsap animations, you will need to use the in-built timeline method
+Create timeline variable and set it to timeline call on gsap
+Now, replace gsap of your minus 20px x animation with timeline variable
+Call to on the previous to method, and set x to x position plus 40 this time
+The first to call will pull x by 20px to the left while the second to call will start at the shifted position and pull x by 40px to the right in sequence
+We know we want to return back to the original position
+So add another to method and set x position back by 20px to the original position
+We have gotten the movement down, but we want emby to 'launch' itself forward at a faster speed to really simulate that 'tackle' effect
+We can do this by going to the code where we shift emby right, and add a duration property to it, setting it to a lower value than default(0.5 is default), so emby shifts right at a faster pace
+Once you are happy with how tackle feels, we want to create an animation for draggle to simulate as if draggle is being 'hit' by the tackle during the time when emby shifts to the right
+Add an onComplete method after duration, and call to on gsap, passing in position of recipient reference as first argument, and for the second, add an object with x property, and set it to the x position of recipient plus 10, which would shift draggle by 10px to the right when emby shifts right
+To simulate the effect of draggle being 'hit', we want to create a wobble effect, and we can do this by setting yoyo property to true, and a repeat property of let's say, 5
+You should see the left right wobble effect, albeit abit too slow
+To increase the pace, set duration to less than default
+During the wobble animation, draggle should also be 'flashing', going in and out of opacity 1 to 0 and back to 1 rapidly, to showcase it's being 'hit'
+To do this we will need a second gsap.to inside the onComplete method because the first one was editted to use timeline where animations inside happen in succession, but the opacity 'flashing' is not going to need it and it happens simultaneously alongside the animations
+We do not yet have an opacity property so add that in the Sprite class and set it to 1
+We will need a save and restore method on context inside Sprite draw, between the drawImage method, because opacity is a global canvas property and will affect everything in the canvas, and we want to limit opacity to inside the drawImage method
+Between the save and restore methods, call globalAlpha on context and set it to opacity property
+Now, tweaking opacity values in Sprite property should affect only the backgrounds and sprites
+Inside the previous second gsap.to mentioned, recipient will be the first argument, and second argument being an object with opacity property set to 0 for testing
+Test tackle again, and draggle should wobble and fade to nothing because opacity is 0
+We will make use of yoyo and repeat properties again to simulate a flashing effect, setting duration to less than default(author uses the same duration as emby shifting right)
+With the animations done to your satisfaction, we want draggle's health bar to decrease when tackled
+In html, give the div with the green health bar of draggle an id of enemyHealthBar
+For the gsap.to method in the onComplete method in attack method, put a comment above for when draggle gets hit to define what the code does
+Inside that section, add another gsap.to before the previous one, link the id you just created(you'll need the id symbol) and for the object, set width property to 50% for testing
+The above works if you see the green health bar reducing by 50%
+Now, we want tackle to be associated to the attack method properties you created previously for emby(name, damage, type) when emby tackles
+So instead of 50%, set width to the damage property of attackMove plus a percentage(because we want a percent not an actual value of 10)
+Clicking tackle now will reduce draggle's hp to 10% which is what the property is but not what we want
+What we want to do is give draggle hp of let's say a 100 and subtract it by 10 so it gives a proper value
+In Sprite, add a property of health and set it to 100(\*\*in a real game you will set this to a class property probably, and set it to a specific value for whatever enemy)
+Now, you can subtract the health property of Sprite by the attack damage
+Your onComplete method will not be able to reference the health property the current method can only reference within the scope of onComplete
+As such, you will need to change onComplete method to an arrow function to unbind it and thus be able to reference outside of itself
+Now, tackle should take off 10% of draggle's hp instead of reducing its health bar to 10%
+With the above working, we want the player(emby) to get tackled now
+Change call of attack on emby to draggle instead, and the recipient to emby
+The movement is wrong because we have hardcoded values in the attack method and they apply specifically for emby on the player's side
+Inside attack method, crate movementDistance variable and set it to 20
+Set a condition if isEnemy(not yet made) property is true, movementDistance will be set instead to negative 20
+Inside the to call on timeline, set the hardcoded values to identical values using movementDistance variable(movementDistance for the left shift, and movementDistance x2 for the right shift)
+In Sprite, reference isEnemy in the constructor and set it to false, and convert it to a class property
+In draggle variable, add the isEnemy property and set it to true
+If the above works, draggle and emby should be tackling and wobble correctly respectively
+The hp bar for draggle reduces for draggle when it tackles because we have not set up the logic for emby yet
+Inside the attack method, create healthBar variable and set it to the id of enemyHealthBar
+After it, set a condition if isEnemy is true, set healthBar variable to id of playerHealthBar(not yet made)
+In html, add id of playerHealthBar to emby's green health bar
+Instead of reference id of enemyHealthBar in gsap.to, reference healthBar variable
+Add and set isEnemy to false in emby variable
+Now when pressing tackle, emby's hp to reduce instead
+Now switch draggle.attack back to emby and recipient back to draggle in allBtns forEach method
+Now, instead of subtracting 10 hp from 100 only 1 time everytime tackle button is clicked(because health is not set to a new value when tackle is clicked)
+To fix this, inside the attack method, set health to health minus attackMove.damage so when gsap.to is called each time the health value is updated
+Remove attackMove.damage in the width's calculation
+Now, everytime you press tackle, the previous health is updated and subtracted properly

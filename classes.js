@@ -21,6 +21,7 @@ class Sprite {
     frames = { max: 1, hold: 10 },
     sprites,
     animate = false,
+    isEnemy = false,
   }) {
     this.position = position;
     this.image = image;
@@ -32,9 +33,14 @@ class Sprite {
     };
     this.animate = animate;
     this.sprites = sprites;
+    this.opacity = 1;
+    this.health = 100;
+    this.isEnemy = isEnemy;
   }
 
   draw() {
+    context.save();
+    context.globalAlpha = this.opacity;
     context.drawImage(
       this.image,
       this.frames.val * this.width,
@@ -46,6 +52,7 @@ class Sprite {
       this.width,
       this.height
     );
+    context.restore();
 
     if (!this.animate) return;
 
@@ -56,5 +63,48 @@ class Sprite {
       if (this.frames.val < this.frames.max - 1) this.frames.val++;
       else this.frames.val = 0;
     }
+  }
+
+  attack({ attackMove, recipient }) {
+    const timeline = gsap.timeline();
+
+    this.health = this.health - attackMove.damage;
+
+    let movementDistance = 20;
+    if (this.isEnemy) movementDistance = -20;
+
+    let healthBar = "#enemyHealthBar";
+    if (this.isEnemy) healthBar = "#playerHealthBar";
+
+    timeline
+      .to(this.position, {
+        x: this.position.x - movementDistance,
+      })
+      .to(this.position, {
+        x: this.position.x + movementDistance * 2,
+        duration: 0.1,
+        onComplete: () => {
+          //Draggle takes damage
+          gsap.to(healthBar, {
+            width: this.health + "%",
+          });
+          gsap.to(recipient.position, {
+            x: recipient.position.x + 10,
+            yoyo: true,
+            repeat: 5,
+            duration: 0.07,
+          });
+
+          gsap.to(recipient, {
+            opacity: 0,
+            yoyo: true,
+            repeat: 5,
+            duration: 0.07,
+          });
+        },
+      })
+      .to(this.position, {
+        x: this.position.x - 20,
+      });
   }
 }
