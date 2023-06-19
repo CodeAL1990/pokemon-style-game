@@ -517,3 +517,71 @@ Now, instead of subtracting 10 hp from 100 only 1 time everytime tackle button i
 To fix this, inside the attack method, set health to health minus attackMove.damage so when gsap.to is called each time the health value is updated
 Remove attackMove.damage in the width's calculation
 Now, everytime you press tackle, the previous health is updated and subtracted properly
+With tackle done, change attack2 in html to Fireball
+Notice that pressing Tackle or Fireball will result in a tackle either way
+For the attack property in emby, we do not want to directly reference the attack object but rather have a separate js file to store all our skills/attacks and we can reference from that file instead
+Create a new js file called attacks.js and move all the data js files such as collisions and battleZones js into a new folder called data inside the project folder to separate them from the image files
+Inside attacks.js, create an attacks object and move the the properties of tackle into the attacks object and wrap the properties into a Tackle object
+Now create a Fireball object with its name, damage of 25, and type of fire
+In html, import attacks.js before classes so the latter can make use of the js file
+Reference e in the event listener's callback, console log e.currentTarget.innerHTML and console log attacks right after, commenting the emby.attack till recipient out
+Clicking tackle or fireball will reference the attacks object, listing the whole object in the console
+Now, instead of just attacks, add bracket notation to it and move e.currentTarget.innerHTML from the previous console log into it, removing the previous log as well
+Now, selecting Tackle or Fireball will reference the object directly from attacks
+Once the console log above shows the correct data for each button, move the console logged text into a variable named selectedAttack, and remove the console log
+Uncomment attackMove till recipient, and instead of the tackle object with its properties inside attackMove property, replace it with selectedAttack variable you just created
+Clicking tackle will work correctly, but clickling fireball will show the tackle animation(because we have not made a fireball one yet), albeit it will show the correct damage number(25) which it correctly references from the Fireball object
+Inside the attack method, add a switch statement, reference attackMove.name, and for case "Tackle", we want to invoke the code involving Tackle(which is the whole section from timeline till the end), so move that code inside this case and add a break statement at the end
+With the switch statement in place, clicking Fireball will not show Tackle anymore while clicking Tackle should still show tackle animation
+Now, we will create case "Fireball" inside the switch statement
+We will need to get the fireball image file into the main js file
+Now for case "Fireball", create a new instance of Sprite named fireball, passing in position object with x at x position and y at y position
+Bring the fireballImage into case "Fireball"(so it only happens when Fireball case occurs), and link it from GameAssets
+Add the image property in fireball and reference fireballImage
+To render the fireballImage out, we will need to draw it in animateBattle, and then reference it in the attack method
+Right before animateBattle, create renderedSprites and assign an empty array to it
+Inside animateBattle, use forEach method on renderedSprites and for each sprite, call draw on it
+Inside the click event listener, in attack property of emby, add renderedSprites inside the object
+Back to attack method, reference renderedSprites, and in case "Fireball", after the creation of fireball, use push method on renderedSprites, passing in the new instance of fireball Sprite
+Clicking fireball button now should show the full fireball spritesheet on the canvas
+With the above working, we can add frames property when creating the new Sprite of fireball, and set max to 4(since fireball has 4 sprites)
+For hold property we used for draggle animation(lower value means faster animation and vice versa), the value will be set to 10
+Unlike the custom made animation of tackle, since we are using sprite images here just like when player is moving on the map, we will need to reference animate property inside fireball, and set it to true
+Now, you should see fireball image animation at emby's position
+To animate the fireball moving from emby's position to draggle, we will use gsap.to after the push method on renderedSprites
+Inside gsap.to, reference fireball's postion, and for the second argument(destination), add an object with x position of recipient as x, y position of recipient as y
+The above should move the fireball animation from emby to draggle
+You want to remove the fireball animation after it reaches draggle, so create an onComplete arrow function method, and use pop on renderedSprites array inside it
+In the section Draggle takes damage, we want that code logic for when the fireball hits draggle as well, so copy and paste that code inside the onComplete method in fireball
+We will need the healthBar id and its condition accessible by all attacks inside the attack method, so move that two lines of code into the global scope inside attack method
+Now, clicking fireball should spawn fireball animation from emby position to draggle position, and when fireball reaches draggle, the 'damage taken' animation should be shown
+Notice that the healthBar for draggle does not move when fireball hits
+This is because the health variable is exclusive to Tackle, and cannot be found in the fireball case
+As such, just do the same thing with healthBar, and move it to the global scope within attack method
+Now, fireball should subtract 25 from draggle's hp bar
+The fireball position is currently spawned from the top left most of emby's sprite(which is the 0,0 position of any image)
+Instead of calling draw on draggle and emby, we can now place them inside renderedSprites array, and the forEach method of renderedSprites which calls draw on each sprite will draw out draggle and emby
+To spawn fireball in front of emby, we will replace the push fireball method on renderedSprites to a splice method
+In the renderedSprites array, we want fireball to be in between draggle and emby, thus we will splice at index 1(which is between 0 and 2), taking out 0 array items, and placing fireball Sprite in
+Doing so will spawn the fireball in front of emby but the pop method you did will pop emby(because array is [draggle, fireball, emby]), instead of the fireball image at the end
+So, replace the pop with splice method and splice at index 1, and take out 1 array item, which will remove the fireball array item
+With the above working correctly, we will now tweak the fireball to 'shoot' correctly in the correct direction
+We will need a helper property called rotation, reference it and set it to 0, and convert it to a class property in Sprite
+We will now use emby to test out rotation in canvas(because fireball is not generated on canvas until fireball is clicked so it will be difficult to visually see how rotation works)
+In Sprite draw, use translate method on context(between save and restore), which has a default of 0,0 starting at the top left corner of canvas
+To move this point to the top left corner of emby, pass in its xy position
+To move this point to the center, you will need to add width divided by 2 for x, and add height divided by 2 for y
+With the point in place, you can call rotate on context, with the first argument being radian(Math.PI multiply by 2 is a full circle for reference)
+For now, rotate by 1 radian(around 45 degrees)
+And, we will need to translate context back to its original position(0,0) on canvas or the rotation will not work
+After calling rotate, call translate again and change the positions, width and height to negative values to reinstate them back to position 0,0
+Your whole background along with the sprites will be rotated now
+Inside the call of rotate on context, change 1 to rotate property(which has a default of 0), which will revert background back to its original position
+With rotation visualised, we can now use the method on the fireball image
+Inside fireball, add a rotation property and set it to 1
+Your fireball should look like it rotated(kinda)
+We will now test it for draggle, so in the event listener, change emby.attack to draggle.attack, and the recipient to emby
+Clicking fireball will spawn it from draggle now but the fireball will shoot in the opposite direction
+Instead of using a hardcoded value of 1 for rotation property, in attack method, create rotation variable in the global scope within attack method and set it to 1
+For the rotation property in fireball, set it to itself(you can write rotation instead of rotation: rotation because they are the same)
+Below rotation variable, set a condition if isEnemy is true, set rotation to a negative value and tweak it till it looks to your liking(you can tweak the rotation for emby's fireball as well)

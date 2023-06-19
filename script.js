@@ -415,26 +415,28 @@ const emby = new Sprite({
   isEnemy: false,
 });
 
+const renderedSprites = [draggle, emby];
 function animateBattle() {
   window.requestAnimationFrame(animateBattle);
   battleBackground.draw();
-  draggle.draw();
-  emby.draw();
+
+  renderedSprites.forEach((sprite) => {
+    sprite.draw();
+  });
 }
 
 //animate();
 animateBattle();
 
+//Event listeners for buttons (attack)
 allBtns = document.querySelectorAll("button");
 allBtns.forEach((button) => {
-  button.addEventListener("click", () => {
+  button.addEventListener("click", (e) => {
+    const selectedAttack = attacks[e.currentTarget.innerHTML];
     emby.attack({
-      attackMove: {
-        name: "Tackle",
-        damage: 10,
-        type: "Normal",
-      },
+      attackMove: selectedAttack,
       recipient: draggle,
+      renderedSprites,
     });
   });
 });
