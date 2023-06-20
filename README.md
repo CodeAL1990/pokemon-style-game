@@ -585,3 +585,40 @@ Clicking fireball will spawn it from draggle now but the fireball will shoot in 
 Instead of using a hardcoded value of 1 for rotation property, in attack method, create rotation variable in the global scope within attack method and set it to 1
 For the rotation property in fireball, set it to itself(you can write rotation instead of rotation: rotation because they are the same)
 Below rotation variable, set a condition if isEnemy is true, set rotation to a negative value and tweak it till it looks to your liking(you can tweak the rotation for emby's fireball as well)
+We will now create a dialogue box overlayed on top of our attack bar interface when any attack is clicked
+In html, find the div that represents your attack bar interface and create another div inside with some dummy text, and it should show up alongside your attacks
+Currently, it's pushing your attack buttons away to fit itself in the div
+Add a position of absolute to it so it does not interact with the space of your buttons
+Set top, right, bottom, and left to 0, and give it a background color so you can see the space it is occupying(which should be the whole attack interface)
+This div you just created should only appear when you click an attack, so set a display of none for now
+Give the div an id of dialogueBox because we want to unhide it whenever an attack is used
+In attack method, link the dialogueBox id(to a variable if you want)
+Use style.display on it and set it to block
+In your game, click an attack and you should see the dialogueBox overlayed on your attack interface
+In your Sprite class, reference name and convert it to a class property
+Back in your js file, set dialogueBox.innerHTML to name property + " used " + attackMove.name(Or use template literals)
+Now, when using an attack, you should get undefined used that attackMove
+Go to your main js and find draggle and emby
+You'll need to add the name properties of draggle and emby and set them to their respective names so your attack method can reference their individual names instead of undefined
+Undefined should be Emby now
+We should refactor now and move code involving battles to a different js file
+Move everything from battlegroundImage to your selectors for buttons out to the new js file and name it battleScene
+You will need to import battleScene.js into your html(old school way), and place it last because it requires data from classes and your main js file
+Your game should still work the same after the above
+In your battleScene js file, add a click event listener for dialogueBox and console log clicked text for now(\*\*I used id directly because the id is immediately created in the DOM once the id is set in html)
+Change cursor to pointer for dialogueBox so user knows it is clickable
+Clicking the dialogueBox will only log out the clicked message for now
+Add the event object inside the callback function of the event listener(or e)
+Call currentTarget for e and call it's style.display to none
+This will hide the dialogueBox whenever it is clicked now
+\*\*New javascript term(for me): Queue
+A queue in js is an array with functions/methods in it and once the function/method is triggered, it is removed from the array
+In battleScene js, create queue after animateBattle call and assign empty array to it
+In the buttons event listener, after emby attacks, you want to use push on queue, passing in an arrow function with draggle.attack(and change recipient to the opposite)
+The attack should also not be our selectedAttack(because it's the enemy AI and should be random)
+So, instead of selectedAttack for draggle, set attack to attacks.Tackle for now
+Now, we will need to call queue inside your event listener for dialogueBox to trigger the draggle.attack in queue array
+In dialogueBox event listener, set a condition where if queue's length is more than 0, call 0 index of queue(\*\*written as queue[0]() for arrow function calls), and shift the queue array immediately after(demonstration of what queue in javascript is)
+Else e.currentTarget.style.display set to none(move this to the else condition)
+Now, when you click an attack and click on the dialogueBox, you should see that draggle use Tackle(since you selected Tackle for draggle)
+To summarise what just happened, player selects attack, clicks on dialogueBox trigger the condition in the event listener where queue's length is more than 0, calling 0 index of queue, queue array shift() happens after, queue array is empty, clicking dialogueBox again goes through the condition again, queue array is empty so go to else condition, dialogueBox display becomes none

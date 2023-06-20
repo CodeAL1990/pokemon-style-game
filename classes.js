@@ -23,6 +23,7 @@ class Sprite {
     animate = false,
     isEnemy = false,
     rotation = 0,
+    name,
   }) {
     this.position = position;
     this.image = image;
@@ -38,6 +39,7 @@ class Sprite {
     this.health = 100;
     this.isEnemy = isEnemy;
     this.rotation = rotation;
+    this.name = name;
   }
 
   draw() {
@@ -77,6 +79,10 @@ class Sprite {
   }
 
   attack({ attackMove, recipient, renderedSprites }) {
+    const dialogueBox = document.querySelector("#dialogueBox");
+    dialogueBox.style.display = "block";
+    dialogueBox.innerHTML = `${this.name} used ${attackMove.name}`;
+
     this.health = this.health - attackMove.damage;
 
     let rotation = 3;
