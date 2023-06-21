@@ -622,3 +622,38 @@ In dialogueBox event listener, set a condition where if queue's length is more t
 Else e.currentTarget.style.display set to none(move this to the else condition)
 Now, when you click an attack and click on the dialogueBox, you should see that draggle use Tackle(since you selected Tackle for draggle)
 To summarise what just happened, player selects attack, clicks on dialogueBox trigger the condition in the event listener where queue's length is more than 0, calling 0 index of queue, queue array shift() happens after, queue array is empty, clicking dialogueBox again goes through the condition again, queue array is empty so go to else condition, dialogueBox display becomes none
+Currently, attacks such as Tackle and Fireball in the html are placed in a static manner, while we want them to be dynamically(using javascript)
+In the div encasing your html buttons, add an id called attacksBox, and remove the button tags
+Now in battleScene.js, create a button element before animateBattle, with variable called button
+Set the button's innerHTML to Fireball
+Bring the attacksBox div into this js file, and append the button to it
+You should see Fireball button being shown in the browser in your attack interface and it should work when you click it
+Just like your attacks.js, we want to create a separate file for our monsters(currently emby and draggle)
+Create monsters.js file and inside it create a monsters object with an Emby object
+In your battleScenes file, find emby variable and extract all properties inside the new instance of Sprite and place it inside the Emby object you just made in monsters.js
+You will need the image link for emby so move embyImage and the src to monsters.js as well
+Import monsters.js to your html right after attacks.js
+Now, since you move emby properties to a new file, when creating a new instance of emby Sprite, you will need to properly reference it from said new file
+Reference monsters.Emby object in your emby Sprite and the code should work as before
+Now do the same for draggle
+With emby and draggle refactored into a new file, we can now add a new property called attack and set it to an empty array
+This empty array will be populated by attacks, and later randomised for the enemy
+Right now, we have two attacks, Tackle and Fireball
+For now, let's populate the array with both Tackle and Fireball from your attacks.js for both Emby and Draggle
+In your Sprite class, we do not have a reference for attacks but extending the constructor references further seems to convoluted(also your Sprite class should not have a default attack property anyway since it applies individually for each unique monster)
+As such, we will need a child class for Sprite and refactor certain properties in Sprite to Monster because we want Sprite to only handle Sprite drawing and all else should be separated(\*\*Single responsibility principle)
+We will create a child class for Sprite called Monster using the extends keyword
+Now, move the entire attack custom method into Monster child class
+Create a constructor and move isEnemy and name property from Sprite into Monster
+All conversions related to the above from reference to class property should also be moved alongside the references(Move health property to Monster --> This has no reference just a hardcoded 100)
+Once the properties you think are unique to the Monsters child class are refactored/moved, you will need to copy the rest of Sprite's constructor into Monsters constructor
+Now, call super for the properties in Monster with an object notation(because we wrap the references in as an object in the constructor) and copy position till rotation inside this the object, removing the assignments because the super call is calling the properties that has these assignments from the parent class
+Back in battleScene, we will not be creating new instances of Sprite for emby and draggle but Monster instead
+\*\*This is a huge refactor so test it out in your browser and make sure that your code is working
+The purpose of the refactor for Monster is to be able to add new properties and not affect the default Sprite class
+Now, add attacks as reference to Monster and convert it to a class property
+Back to monsters.js, the Tackle and Fireball objects you created in attacks.js will now be accessible via the Monster class and you can check this by console logging emby or draggle after the new instances of Monster
+You should be able to see a Monster object and a list of objects, one called attacks that is populated with the Tackle and Fireball objects with their properties
+Right above animateBattle, you want to use the forEach method on emby.attacks and for each attack, move the button element you created up to the code in which you appended the button into the arrow function
+Instead of just "Fireball", you want its attack.name
+\*\*To add or edit an attack, you will do it in attacks.js. Followed by going to attack method in classes.js and adding a switch case with how you want the animation logic to be. Lastly, you will need to populate it in the attacks array in monsters.js
