@@ -44,13 +44,36 @@ allBtns.forEach((button) => {
       renderedSprites,
     });
 
+    if (draggle.health <= 0) {
+      queue.push(() => {
+        draggle.faint();
+      });
+      return;
+    }
+    //draggle or enemy attacks
+    const randomAttack =
+      draggle.attacks[Math.floor(Math.random() * draggle.attacks.length)];
+
     queue.push(() => {
       draggle.attack({
-        attackMove: attacks.Tackle,
+        attackMove: randomAttack,
         recipient: emby,
         renderedSprites,
       });
     });
+
+    if (emby.health <= 0) {
+      queue.push(() => {
+        emby.faint();
+      });
+    }
+  });
+
+  button.addEventListener("mouseenter", (e) => {
+    const selectedAttack = attacks[e.currentTarget.innerHTML];
+    const attackType = document.querySelector("#attackType");
+    attackType.innerHTML = selectedAttack.type;
+    attackType.style.color = selectedAttack.color;
   });
 });
 

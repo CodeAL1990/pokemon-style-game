@@ -101,12 +101,24 @@ class Monster extends Sprite {
     this.name = name;
     this.attacks = attacks;
   }
+
+  faint() {
+    const dialogueBox = document.querySelector("#dialogueBox");
+    dialogueBox.innerHTML = `${this.name} has fainted!`;
+    gsap.to(this.position, {
+      y: this.position.y + 20,
+    });
+    gsap.to(this, {
+      opacity: 0,
+    });
+  }
+
   attack({ attackMove, recipient, renderedSprites }) {
     const dialogueBox = document.querySelector("#dialogueBox");
     dialogueBox.style.display = "block";
     dialogueBox.innerHTML = `${this.name} used ${attackMove.name}`;
 
-    this.health = this.health - attackMove.damage;
+    recipient.health = recipient.health - attackMove.damage;
 
     let rotation = 3;
     if (this.isEnemy) rotation = -2.5;
@@ -139,7 +151,7 @@ class Monster extends Sprite {
           y: recipient.position.y,
           onComplete: () => {
             gsap.to(healthBar, {
-              width: this.health + "%",
+              width: recipient.health + "%",
             });
             gsap.to(recipient.position, {
               x: recipient.position.x + 10,
@@ -174,7 +186,7 @@ class Monster extends Sprite {
             onComplete: () => {
               //Draggle takes damage
               gsap.to(healthBar, {
-                width: this.health + "%",
+                width: recipient.health + "%",
               });
               gsap.to(recipient.position, {
                 x: recipient.position.x + 10,

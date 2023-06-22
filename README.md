@@ -657,3 +657,35 @@ You should be able to see a Monster object and a list of objects, one called att
 Right above animateBattle, you want to use the forEach method on emby.attacks and for each attack, move the button element you created up to the code in which you appended the button into the arrow function
 Instead of just "Fireball", you want its attack.name
 \*\*To add or edit an attack, you will do it in attacks.js. Followed by going to attack method in classes.js and adding a switch case with how you want the animation logic to be. Lastly, you will need to populate it in the attacks array in monsters.js
+Add the remaining attack in your queue using push in your event listener
+To randomise the attacks being employed by the opponent(draggle), inside the click event listener for your buttons, above the push methods on queue, call attacks on draggle, with a randomised number between 0 and length of draggle's attacks(you will need to wrap Math.floor on your randomised number to get a whole number for your indexes)
+You can assign the above to a variable called randomAttack
+Now, instead of referencing the attacks object directly in the attackMove property in your push method, you can reference randomAttack which will get a random attack from the attacks object
+Since it's a random attack, you can now remove the second push method on queue
+Test the battle out in your game to make sure the attacks are randomised for draggle
+Back to your event listener for your buttons, add another button event listener for mouseenter below it
+Console log a random message in your new event listener and you should see each time you click on your attack buttons, it should log out the message
+We will now copy the selectedAttack and its assignment you did for your previous button event listener and paste it in your new event listener
+Pass in the event object(e) on your callback function
+In your html for your h1 tag for Attack Type text, add an id called attackType
+Back to your event listener, bring the attackType div into your event listener and set its innerHTML to selectedAttack's type property
+Now, hovering over Tackle or Fireball should show your attack's type
+You can change the color of your attack type text by adding a property in your attacks called color and setting them to the color you want for each attack type
+Back to your event listener again, just like how you reference for type, you can call style's color on your querySelector(or the variable you assign it to), and reference the color property on selectedAttack
+Add a section called draggle or enemy attacks for your randomAttack, and push method on queue
+Above that section, set a condition when draggle's health is less than or equal to 0, call push on queue, passing in an arrow function of faint method(not yet made) on draggle
+After the condition, call return statement to immediately end after the condition is met as we do not want draggle to attack after it has fainted
+Inside your Monster class, we will add the faint method
+Below the constructor, add faint custom method and console log a message in it
+The idea is that when draggle's hp goes to 0 or below, the message should be logged out which is not the case
+In your attack method, notice that we are decrementing health by damage numbers, but health in this case only affects the player(emby) and not the opponent(recipient)
+As such, we will need to go to codes that reference this.health to be swapped to recipient.health because that's when the faint condition will occur(for now)
+After refactoring the above, when draggle's health goes to 0, the message should log out
+Now, replace that console log with the dialogueBox div and set its innerHTML to this.name has fainted
+Inside faint method, you would also want the monster fainting to have a faint animation
+USe gsap.to with what you want to animate as first argument(this.position) and at the current position, wrap second argument in an object and set y to the current y's position plus 20(down)
+Call a second gsap.to and call this keyword on first argument, and set opacity to 0 on the second argument
+Now, when draggle faints, it should play the gsap animation you just wrote inside faint method
+Once the condition for draggle fainting is done, we want to do it for the player(emby) as well
+Emby fainting should only occur after draggle attacks so the condition for emby.health going below 0 should be placed below the draggle attacks section
+Test it out and emby should faint when draggle bring its health to 0
