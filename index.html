@@ -26,121 +26,123 @@
           left: 0;
           opacity: 0;
           pointer-events: none;
+          z-index: 10;
         "
       ></div>
 
-      <!--Health Bar of Draggle-->
-      <div
-        style="
-          background-color: white;
-          width: 250px;
-          position: absolute;
-          top: 50px;
-          left: 50px;
-          border: 4px solid rgb(114, 114, 189);
-          padding: 12px;
-        "
-      >
-        <h1>Draggle</h1>
-        <div style="position: relative">
-          <div
-            id="enemyHealthBar"
-            style="
-              height: 5px;
-              background-color: green;
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              width: 100%;
-            "
-          ></div>
-          <div
-            style="height: 5px; background-color: #ccc; margin-top: 10px"
-          ></div>
-        </div>
-      </div>
-
-      <!--Health Bar of Emby-->
-      <div
-        style="
-          background-color: white;
-          width: 250px;
-          position: absolute;
-          top: 330px;
-          right: 50px;
-          border: 4px solid rgb(114, 114, 189);
-          padding: 12px;
-        "
-      >
-        <h1>Emby</h1>
-        <div style="position: relative">
-          <div
-            id="playerHealthBar"
-            style="
-              background-color: white;
-              height: 5px;
-              background-color: green;
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              width: 100%;
-            "
-          ></div>
-          <div
-            style="height: 5px; background-color: #ccc; margin-top: 10px"
-          ></div>
-        </div>
-      </div>
-
       <canvas id="canvas1"></canvas>
 
-      <div
-        style="
-          background-color: white;
-          height: 140px;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-          border: 4px solid rgb(114, 114, 189);
-          display: flex;
-        "
-      >
+      <div id="userInterface">
+        <!--Health Bar of Draggle-->
         <div
-          id="dialogueBox"
           style="
             background-color: white;
+            width: 250px;
             position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            display: none;
-            cursor: pointer;
+            top: 50px;
+            left: 50px;
+            border: 4px solid rgb(114, 114, 189);
+            padding: 12px;
           "
         >
-          Dummy Text
+          <h1>Draggle</h1>
+          <div style="position: relative">
+            <div
+              id="enemyHealthBar"
+              style="
+                height: 5px;
+                background-color: green;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+              "
+            ></div>
+            <div
+              style="height: 5px; background-color: #ccc; margin-top: 10px"
+            ></div>
+          </div>
+        </div>
+
+        <!--Health Bar of Emby-->
+        <div
+          style="
+            background-color: white;
+            width: 250px;
+            position: absolute;
+            top: 330px;
+            right: 50px;
+            border: 4px solid rgb(114, 114, 189);
+            padding: 12px;
+          "
+        >
+          <h1>Emby</h1>
+          <div style="position: relative">
+            <div
+              id="playerHealthBar"
+              style="
+                background-color: white;
+                height: 5px;
+                background-color: green;
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+              "
+            ></div>
+            <div
+              style="height: 5px; background-color: #ccc; margin-top: 10px"
+            ></div>
+          </div>
         </div>
         <div
-          id="attacksBox"
           style="
-            width: 66.66%;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-          "
-        ></div>
-        <div
-          style="
-            width: 33.34%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background-color: white;
+            height: 140px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
             border: 4px solid rgb(114, 114, 189);
+            display: flex;
           "
         >
-          <h1 id="attackType">Attack Type</h1>
+          <div
+            id="dialogueBox"
+            style="
+              background-color: white;
+              position: absolute;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+              display: none;
+              cursor: pointer;
+            "
+          >
+            Dummy Text
+          </div>
+          <div
+            id="attacksBox"
+            style="
+              width: 66.66%;
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+            "
+          ></div>
+          <div
+            style="
+              width: 33.34%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              border: 4px solid rgb(114, 114, 189);
+            "
+          >
+            <h1 id="attackType">Attack Type</h1>
+          </div>
         </div>
       </div>
     </div>

@@ -689,3 +689,50 @@ Now, when draggle faints, it should play the gsap animation you just wrote insid
 Once the condition for draggle fainting is done, we want to do it for the player(emby) as well
 Emby fainting should only occur after draggle attacks so the condition for emby.health going below 0 should be placed below the draggle attacks section
 Test it out and emby should faint when draggle bring its health to 0
+Now, we want to transition back to the map after the battle has ended
+We can do this after the condition when draggle's health goes to 0(or emby but we testing it out on draggle first)
+Remove the return statement
+Add another push method on queue, and inside the arrow function, add a section that says fade back to black
+Inside the section, use gsap.to on overlappingDiv id and set opacity to 1
+Now, when draggle's hp goes to 0, the battle screen should turn black but the divs for health and attack are still visible
+To place the overlappingDiv over them, go to html(or css if you use that), and in style, set z-index to more than 1(default is 1)
+We want to transition back to the map after the fade so add an OnComplete property in the gsap.to method, assign it an arrow function, and call cancelAnimationFrame, passing in battleAnimationId(not yet assigned)
+For your requestAnimationFrame for animateBattle, assign it to a variable called battleAnimationId, and create that variable outside
+Console log battleAnimationId after calling draw on background in animateBattle to check if animateBattle is cancelled after fading to black(frames should keep increasing in console, and when it fades to black, frames should stop running)
+Once the above works, call animate after cancelling animation for animateBattle in the onComplete property
+The fade to black does not immediately transition back to map because opacity is still at 1
+You will need to call gsap.to after animate call on the overlappingDiv and set opacity back to 0 so the map shows
+The map will show once the above is implemented but the health bars and attack interface remain
+In your html you want to separate your user interface divs and your overlappingDiv, using the canvas as the middleman(overlappingDiv, canvas, user interface)
+Move your health bars to below canvas together with your attack and dialogueBox interfaces
+Now, wrap the health bar up till your attackType div in a parent div with an id of userInterface
+With the above done, you can now bring in the userInterface div in onComplete property after animate call
+Set userInterface's style display to none
+Now the transition back should be visually correct, but when you re-activate battle by going into the battle patches again, your interfaces will be missing now(along with draggle) and will need to be re-initialized
+Back in battleScene.js, you will need a new custom method call initBattle, before animateBattle method
+All initialization of the battle should be inside this method
+For draggle and emby, you can create their variables outside not assigned to anything, and create their instances inside initBattle
+Do this for renderedSprites as well
+The forEach method for attacks where we create our buttons should be inside initBattle too
+We would want to reset queue as well after a battle is done so move queue assignment into initBattle and the variable outside as well
+The event listeners for our buttons should be place inside initBattle as well since they only occur inside a battle
+dialogueBox will not be moved inside initBattle because we only want it to occur once and placing it inside initBattle will activate double clicks
+Call initBattle before animateBattle so animateBattle can reference initBattle
+Go back to your browser and retry the sequence --> faint, map transition, back to battle
+The transition back to battle will not work as you will need to call initBattle alongside the animateBattle call when you first call it when activating a new animation loop(i lied it will still not work yet)
+When you initialize battle, you will see couple things missing(sprites, and userInterface)
+To reactivate userInterface, since we set display to none when transitioning from battle to map, we will need to set display to block at the start of initBattle(you will need to bring in the userInterface div inside initBattle)
+Do it for dialogueBox as well and set its display to none
+For Health bars(it will show draggle's hp to be 0), you will need to set health bar of enemy and player back to 100%
+Replaying the transitions again your user interface appear but sprites are still missing and you have duplicates in your attack bar
+To remove duplication, because your attackBox is repopulated with buttons but not removed initially, you will need to bring in your attackBox div in initBattle, and call replaceChildren on it so you have a clean slate
+For the disappearing sprites, the bug is in your classes.js, in the onload function for image
+Sometimes, images do not load when your onload is set after your image src
+You will need to set image.src as a class property and the image property should be set to a new instance of Image directly
+You create your monsters inside initBattle where you passed in monsters object
+So, go to monsters.js for your monsters object, and instead of referencing the images of draggle and emby in their image properties, assign the iamge property to a source(src) object with the direct image link
+Remove the code for linking images at the start of monsters.js because you are now directly linking them in your monsters object and referencing them from your Sprite class
+\*\*image.src references image from constructor so you do not need an image.src inside constructor
+The transition to map only happens when draggle faints, so you will need the push method on queue for emby's health to 0 condition as well(there's probably a way to merge them to one so all monsters share the same code for the transition)
+You will need to set battle.initiated back to false in the onComplete properties in the fade to black sections so player can move again when user transitions back to map
+\*\* There was a bug on my side where emby health goes to 0 and it did not faint, and only another attack after that made it faint. This is because i did not put the condition inside the queue method
