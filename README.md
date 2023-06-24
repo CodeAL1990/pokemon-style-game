@@ -552,7 +552,7 @@ To animate the fireball moving from emby's position to draggle, we will use gsap
 Inside gsap.to, reference fireball's postion, and for the second argument(destination), add an object with x position of recipient as x, y position of recipient as y
 The above should move the fireball animation from emby to draggle
 You want to remove the fireball animation after it reaches draggle, so create an onComplete arrow function method, and use pop on renderedSprites array inside it
-In the section Draggle takes damage, we want that code logic for when the fireball hits draggle as well, so copy and paste that code inside the onComplete method in fireball
+In the section Draggle takes damage(changed to Recipient takes tackle damage for tackle and takes fireball damage for fireball), we want that code logic for when the fireball hits draggle as well, so copy and paste that code inside the onComplete method in fireball
 We will need the healthBar id and its condition accessible by all attacks inside the attack method, so move that two lines of code into the global scope inside attack method
 Now, clicking fireball should spawn fireball animation from emby position to draggle position, and when fireball reaches draggle, the 'damage taken' animation should be shown
 Notice that the healthBar for draggle does not move when fireball hits
@@ -736,3 +736,46 @@ Remove the code for linking images at the start of monsters.js because you are n
 The transition to map only happens when draggle faints, so you will need the push method on queue for emby's health to 0 condition as well(there's probably a way to merge them to one so all monsters share the same code for the transition)
 You will need to set battle.initiated back to false in the onComplete properties in the fade to black sections so player can move again when user transitions back to map
 \*\* There was a bug on my side where emby health goes to 0 and it did not faint, and only another attack after that made it faint. This is because i did not put the condition inside the queue method
+We will now add audio to our attacks and such
+Create audio.js and audio object
+Import audio js to html
+Bring in the audio files into a new audio folder
+Inside audio object, we will not be using new Audio in-built within javascript as it not very good
+We will be using howler.js library instead for sounds
+Copy the script tag for howler.js (version 2.2.3 for this) in cdn and import it to your html in a script tag
+Create Map property and call a new instance of Howl(with howler.js) and pass in object with src property linking your map audio file
+We will need to add a html5 property assign to true inside the object as well or it will not work because we do not have a local server
+We are still in our battleScene which we do not want so go to battleScene and comment out initBattle and animateBattle and uncomment/call animate
+It should show your map now but with the userInterface overlayed on top
+Go to your html and set its style to display of none so your map is fully visible
+In your main js file, try calling play from the Map property in audio object(My audio could play but author's could not so xD)
+Anyway, create a click event listener with an arrow function to call play on audio's Map property
+This will trigger it multiple times whenever you click so you create a boolean effect by creating clicked variable assign to false, and inside the event listener, only play the audio if clicked is false, then set clicked to true
+With the above done, trigger a battle and you will notice the audio continues to play which we do not want
+We want the audio to stop playing, maybe trigger a transitional audio to battle, and stop that transitional audio, and then switch to battle audio
+Go to our cancelAnimationFrame for animationId where we deactivate animation to transition to map
+This is where battle triggers so call stop on the audio for Map after the above
+We will call play on initBattle property(not yet made) on audio and also a battle property on audio right after
+Back in audio js, create new InitBattle with new Howl passing an object with src and html5 properties similar to what you did for Map
+Do the same for Battle property as well(some audio files are wav and some are mp3)
+Notice that the volume is abit too loud for the transition, so we can add a volume property and set it to the appropriate value(0 is mute 1 is max volume)
+We will now bring in sound effect for tackle
+In your audio object, add tackleHit property and assign new Howl, passing in the same properties as before, assigning the properties the appropriate value or links
+Do the same for fireball(call it fireballHit)
+You will have an additional property called initFireball(to simulate the creation of the fireball) with the same properties
+For tackle, we go to attack method and find the instance when our recipient gets hit
+In the section Draggle takes damage(changed to Recipient takes tackle damage for tackle and fireball damage for fireball) for case Tackle which is where recipient gets hit by tackle, call play on audio's tackleHit
+Comment animate in battleScene and uncomment initBattle and animateBattle to get into battles to test the sounds
+You will hear map audio once clicking on tackle but we will not start with a battle by default so it is fine for now(or you can comment the audio for map out for now)
+For initFireball, we go to where we create fireball which is in attack method, in the switch case for Fireball
+Inside the case, add the audio for initFireball at the start
+For fireballHit, find the section where recipient takes fireball damage, and call play on the appropriate audio
+With the audio for the attacks working, we want to bring in audio for victory into audio.js for fainting(basically we do not have a fainting sound effect just an immediate victory sound effect after a monster faints)
+In our faint method, right after everything, we will call play on victory's audio
+So when battle ends, we want to play map music on transition
+To do that, we go to the conditions where when draggle's or emby's health goes to 0, right at the end when initiated becomes false, we play the map audio(do it for both emby and draggle)
+Uncomment animate in battleScene and comment the our calls and change opacity of Boundary to 0, and uncomment your map audio code if you commented it, and test your game out
+You will hear battle music even when battle is done so we want to go the code where it dictates battle is done to stop the battle music
+\*\*I tried it putting it in both when draggle or emby faints, but i guess it's better to place it in faint method after victory(faint) sound effect
+\*\*I called play on map without the boolean and event listener and it works on my browser(commenting the boolean and event listener for reference), although this is on linux(ubuntu) so that might have been the difference
+And done!(maybe)

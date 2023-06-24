@@ -71,6 +71,7 @@ function initBattle() {
                 opacity: 0,
               });
               battle.initiated = false;
+              audio.map.play();
             },
           });
         });
@@ -104,6 +105,7 @@ function initBattle() {
                   opacity: 0,
                 });
                 battle.initiated = false;
+                audio.map.play();
               },
             });
           });
@@ -124,15 +126,16 @@ function animateBattle() {
   battleAnimationId = window.requestAnimationFrame(animateBattle);
   battleBackground.draw();
 
-  console.log(battleAnimationId);
+  //console.log(battleAnimationId);
 
   renderedSprites.forEach((sprite) => {
     sprite.draw();
   });
 }
 
-initBattle();
-animateBattle();
+animate();
+//initBattle();
+//animateBattle();
 
 //Event listener for dialogueBox
 dialogueBox.addEventListener("click", (e) => {

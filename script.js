@@ -229,6 +229,11 @@ function animate() {
         console.log("Battle occurs");
         //deactivate current animation loop
         window.cancelAnimationFrame(animationId);
+
+        audio.map.stop();
+        audio.initBattle.play();
+        audio.battle.play();
+
         battle.initiated = true;
         gsap.to("#overlappingDiv", {
           opacity: 1,
@@ -372,6 +377,11 @@ function animate() {
   }
 }
 
-//animate();
-
-//island.onload = () => {};
+audio.map.play();
+/* let clicked = false;
+addEventListener("click", () => {
+  if (!clicked) {
+    audio.map.play();
+    clicked = true;
+  }
+}); */
